@@ -1,11 +1,12 @@
 import { server } from "@passwordless-id/webauthn";
+import { KeyGen } from "~/src/storage";
 import { RegisterBody } from "~/src/types";
 
 export default defineEventHandler(async (event) => {
   const body: RegisterBody = await readBody(event);
   const origin = event.context.cloudflare.env.ORIGIN;
   const challenge = body.challenge;
-  const key = "challenge-" + challenge;
+  const key = KeyGen.challenge(challenge);
 
   const validChallenge = await event.context.cloudflare.env.KV.get(key);
   if (!validChallenge) {
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
   const username = registration.username;
 
   await event.context.cloudflare.env.KV.put(
-    "auth-" + username,
+    KeyGen.credential(username),
     JSON.stringify(registration.credential),
     {
       expirationTtl: 60 * 5, //secs
