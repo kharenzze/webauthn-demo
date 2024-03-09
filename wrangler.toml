@@ -3,6 +3,7 @@ compatibility_date = "2024-03-04"
 
 [vars]
 ORIGIN = 'https://webauthn.demo.paoloraez.dev'
+JWT_SECRET = 'cc7e0d44fd473002f1c42167459001140ac6389b7353f8088f4d9a95f2f596f2' # Better to add it as secret. Since this is a demo project, we keep it simple.
 
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
 # Note: Use secrets to store sensitive data.
