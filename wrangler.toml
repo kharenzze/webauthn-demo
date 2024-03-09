@@ -1,6 +1,9 @@
 name = "webauthn-nuxt-cf"
 compatibility_date = "2024-03-04"
 
+[vars]
+ORIGIN = 'https://webauthn.demo.paoloraez.dev'
+
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
 # Note: Use secrets to store sensitive data.
 # Docs: https://developers.cloudflare.com/workers/platform/environment-variables
