@@ -1,22 +1,28 @@
 <script setup lang="ts">
 import { client } from '@passwordless-id/webauthn'
 
-const challenge = useState('challenge', () => crypto.randomUUID())
 const name = ref('Paolo')
+const userHandle = useState(() => getRandomU64() + '')
 
 const onSubmit = async () => {
   try {
-    const registration = await client.register(name.value, challenge.value, {
+    const { challenge } = await $fetch('/api/passkey/challenge', {
+      method: 'GET',
+    })
+    const registration = await client.register(name.value, challenge, {
       authenticatorType: "auto",
       userVerification: "required",
       timeout: 60000,
       attestation: true,
-      userHandle: "recommended to set it to a random 64 bytes value",
+      userHandle: userHandle.value,
       debug: true
     })
     $fetch('/api/passkey/register', {
       method: 'POST',
-      body: registration
+      body: {
+        registration,
+        challenge
+      }
     })
   } catch (err) {
     console.error(err)
@@ -30,7 +36,6 @@ const onSubmit = async () => {
     Hi there!
   </div>
   <p>Challenge</p>
-  <p>{{ challenge }}</p>
   <input type="text" v-model="name">
   <button @click="onSubmit">
     Sign in
