@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: "Invalid challenge",
     });
   }
-  event.context.cloudflare.env.KV.delete(challengeKey);
+  await event.context.cloudflare.env.KV.delete(challengeKey);
 
   const credentialStr = await event.context.cloudflare.env.KV.get(
     KeyGen.credential(username)

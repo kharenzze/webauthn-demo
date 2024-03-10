@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: "Invalid challenge",
     });
   }
-  event.context.cloudflare.env.KV.delete(key);
+  await event.context.cloudflare.env.KV.delete(key);
 
   const registration = await server.verifyRegistration(body.registration, {
     origin,
