@@ -37,5 +37,4 @@ export default defineEventHandler(async (event) => {
   event.node.res.setHeader("Set-Cookie", getAuthCookie(jwt));
 
   return { message: "ok", registration };
-  // ... Do whatever you want here
 });

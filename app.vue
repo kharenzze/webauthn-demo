@@ -4,7 +4,7 @@ import type { AuthenticateBody, RegisterBody } from './src/types';
 
 const session = await useJWTSession()
 
-const name = ref('Paolo')
+const name = ref('')
 const userHandle = useState(() => getRandomU64() + '')
 
 const onRegister = async () => {
@@ -58,6 +58,13 @@ const onSignIn = async () => {
   window.location.reload()
 }
 
+const onSignOut = async () => {
+  await $fetch('/api/passkey/signout', {
+    method: 'GET',
+  })
+  window.location.reload()
+}
+
 </script>
 
 <template>
@@ -69,6 +76,9 @@ const onSignIn = async () => {
   </Head>
   <template v-if="session">
     <p>Hi {{ session.username }}</p>
+    <button @click="onSignOut">
+      Sign out
+    </button>
   </template>
   <template v-else>
     <div>

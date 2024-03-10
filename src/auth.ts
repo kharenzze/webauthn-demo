@@ -14,7 +14,7 @@ export const generateJWT = (evt: ReqEvent) => async (username: string) => {
   } satisfies IPayload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("1min")
+    .setExpirationTime("5min")
     .sign(getSecret(evt));
 
   return jwt;
