@@ -2,6 +2,8 @@
 import { client } from '@passwordless-id/webauthn'
 import type { AuthenticateBody, RegisterBody } from './src/types';
 
+const session = await useJWTSession()
+
 const name = ref('Paolo')
 const userHandle = useState(() => getRandomU64() + '')
 
@@ -18,7 +20,7 @@ const onRegister = async () => {
       userHandle: userHandle.value,
       debug: true
     })
-    $fetch('/api/passkey/register', {
+    await $fetch('/api/passkey/register', {
       method: 'POST',
       body: {
         registration,
@@ -28,6 +30,7 @@ const onRegister = async () => {
   } catch (err) {
     console.error(err)
   }
+  window.location.reload()
 }
 
 const onSignIn = async () => {
@@ -41,7 +44,7 @@ const onSignIn = async () => {
       timeout: 60000,
       debug: true
     })
-    $fetch('/api/passkey/signin', {
+    await $fetch('/api/passkey/signin', {
       method: 'POST',
       body: {
         authentication,
@@ -52,6 +55,7 @@ const onSignIn = async () => {
   } catch (err) {
     console.error(err)
   }
+  window.location.reload()
 }
 
 </script>
@@ -63,15 +67,23 @@ const onSignIn = async () => {
       WebAuthn Demo
     </Title>
   </Head>
-  <div>
-    Hi there!
-  </div>
-  <p>Challenge</p>
-  <input type="text" v-model="name">
-  <button @click="onRegister">
-    Register
-  </button>
-  <button @click="onSignIn">
-    Sign in
-  </button>
+  <template v-if="session">
+    <p>Hi {{ session.username }}</p>
+  </template>
+  <template v-else>
+    <div>
+      Hi there!
+    </div>
+    <p>Challenge</p>
+    <input type="text" v-model="name">
+    <button @click="onRegister">
+      Register
+    </button>
+    <button @click="onSignIn">
+      Sign in
+    </button>
+
+  </template>
+
+
 </template>

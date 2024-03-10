@@ -13,3 +13,7 @@ export interface AuthenticateBody {
   authentication: AuthenticationEncoded;
   username: string;
 }
+
+import type { H3Event, EventHandlerRequest } from "../node_modules/h3";
+
+export type ReqEvent = H3Event<EventHandlerRequest>;

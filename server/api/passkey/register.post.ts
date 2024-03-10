@@ -1,4 +1,5 @@
 import { server } from "@passwordless-id/webauthn";
+import { generateJWT, getAuthCookie } from "~/src/auth";
 import { KeyGen } from "~/src/storage";
 import { RegisterBody } from "~/src/types";
 
@@ -28,10 +29,13 @@ export default defineEventHandler(async (event) => {
     KeyGen.credential(username),
     JSON.stringify(registration.credential),
     {
-      expirationTtl: 60 * 5, //secs
+      expirationTtl: 60 * 60, //secs
     }
   );
 
-  return { message: "ok" };
+  const jwt = await generateJWT(event)(username);
+  event.node.res.setHeader("Set-Cookie", getAuthCookie(jwt));
+
+  return { message: "ok", registration };
   // ... Do whatever you want here
 });

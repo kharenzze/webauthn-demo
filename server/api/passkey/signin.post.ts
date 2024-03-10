@@ -2,11 +2,12 @@ import { server } from "@passwordless-id/webauthn";
 import { CredentialKey } from "@passwordless-id/webauthn/dist/esm/types";
 import { KeyGen } from "~/src/storage";
 import { AuthenticateBody } from "~/src/types";
+import { generateJWT, getAuthCookie } from "~/src/auth";
 
 export default defineEventHandler(async (event) => {
   const body: AuthenticateBody = await readBody(event);
   const origin = event.context.cloudflare.env.ORIGIN;
-  const challenge = body.challenge;
+  const { challenge, username } = body;
   const challengeKey = KeyGen.challenge(challenge);
 
   const validChallenge = await event.context.cloudflare.env.KV.get(
@@ -22,11 +23,10 @@ export default defineEventHandler(async (event) => {
   event.context.cloudflare.env.KV.delete(challengeKey);
 
   const credentialStr = await event.context.cloudflare.env.KV.get(
-    KeyGen.credential(body.username)
+    KeyGen.credential(username)
   );
-  console.log(credentialStr);
 
-  const credential = JSON.parse(credentialStr ?? "") as CredentialKey;
+  const credential = JSON.parse(credentialStr || "") as CredentialKey;
 
   if (!credential) {
     throw createError({
@@ -44,8 +44,10 @@ export default defineEventHandler(async (event) => {
       userVerified: true,
     }
   );
-  console.log(auth);
 
-  return { message: "ok" };
+  const jwt = await generateJWT(event)(username);
+  event.node.res.setHeader("Set-Cookie", getAuthCookie(jwt));
+
+  return { message: "ok", auth };
   // ... Do whatever you want here
 });
