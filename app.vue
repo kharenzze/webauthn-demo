@@ -4,7 +4,7 @@ import type { AuthenticateBody, RegisterBody } from './src/types';
 
 const session = await useJWTSession()
 
-const name = ref('')
+const username = ref('')
 const userHandle = useState(() => getRandomU64() + '')
 
 const onRegister = async () => {
@@ -12,7 +12,7 @@ const onRegister = async () => {
     const { challenge } = await $fetch('/api/passkey/challenge', {
       method: 'GET',
     })
-    const registration = await client.register(name.value, challenge, {
+    const registration = await client.register(username.value, challenge, {
       authenticatorType: "auto",
       userVerification: "required",
       timeout: 60000,
@@ -49,7 +49,7 @@ const onSignIn = async () => {
       body: {
         authentication,
         challenge,
-        username: name.value
+        username: username.value
       } as AuthenticateBody
     })
   } catch (err) {
@@ -85,7 +85,7 @@ const onSignOut = async () => {
       Hi there!
     </div>
     <p>Challenge</p>
-    <input type="text" v-model="name">
+    <input type="text" v-model="username">
     <button @click="onRegister">
       Register
     </button>
