@@ -1,7 +1,7 @@
-import { verifyJWT, type IPayload } from "~/src/auth";
+import { verifyJWT, type SessionPayload } from "~/src/auth";
 
 export const useJWTSession = async () => {
-  const session = useState<IPayload | undefined>("session");
+  const session = useState<SessionPayload | undefined>("session");
   if (process.server) {
     const jwt = useCookie("x-auth");
     console.log("coo", jwt.value);

@@ -4,14 +4,14 @@ import type { ReqEvent } from "./types";
 const getSecret = (evt: ReqEvent) =>
   new TextEncoder().encode(evt.context.cloudflare.env.JWT_SECRET);
 
-export interface IPayload {
+export interface SessionPayload {
   username: string;
 }
 
 export const generateJWT = (evt: ReqEvent) => async (username: string) => {
   const jwt = await new SignJWT({
     username,
-  } satisfies IPayload)
+  } satisfies SessionPayload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("5min")
@@ -22,7 +22,7 @@ export const generateJWT = (evt: ReqEvent) => async (username: string) => {
 
 export const verifyJWT = (evt: ReqEvent) => async (jwt: string) => {
   try {
-    const { payload } = await jwtVerify<IPayload>(jwt, getSecret(evt));
+    const { payload } = await jwtVerify<SessionPayload>(jwt, getSecret(evt));
     return payload;
   } catch (err) {
     return undefined;
