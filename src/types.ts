@@ -3,6 +3,8 @@ import type {
   RegistrationEncoded,
 } from "@passwordless-id/webauthn/dist/esm/types";
 
+export type Opt<T> = T | undefined;
+
 export interface RegisterBody {
   challenge: string;
   registration: RegistrationEncoded;
