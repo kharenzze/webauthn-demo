@@ -12,6 +12,7 @@
     "build-cf-types": "wrangler types"
   },
   "dependencies": {
+    "@nuxt/ui": "^2.14.2",
     "@passwordless-id/webauthn": "^1.4.1",
     "jose": "^5.2.3",
     "nuxt": "^3.10.3",
