@@ -16,6 +16,7 @@
     "@passwordless-id/webauthn": "^1.4.1",
     "jose": "^5.2.3",
     "nuxt": "^3.10.3",
+    "valibot": "^0.30.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
